@@ -8,22 +8,16 @@ exports.Getstudent = async (req, res) => {
     }
   };
   exports.Getstudentbyage= (req, res, next) => {
-    User.aggregate([
-        { $match : age>18 },
-        { $sort : {name:-1}  },
-        { $project : { _id : 0, name : 1  } }
-    ])
-    .then(response => {
-        res.json({
-            response
-        })
-    })
-    .catch(error => {
-        res.json({
-            message: 'An error occured!'
-        })
-    })
-}
+    student.aggregate([
+      { $match: { age: { $gt: 18 } } }
+    ]).exec((err, students) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Error retrieving students');
+      }
+      res.json(students);
+    });
+  }
   exports.Getstudentbynote = async (req, res) => {
     try { const age=req.body.age
       const ls= await student.find({age});
@@ -46,7 +40,27 @@ exports.Getstudent = async (req, res) => {
     }};
 
 
-
+    exports. getStudentsNameSort = (req, res) => {
+      student.find({note:{$gte:10}}).sort({name:1}).exec((err, data) => {
+          if (err) {
+              res.status(500).send({ message: err.message || "Some error occurred while retrieving students." });
+          } else {
+              res.json(data);
+          }
+      });
+  };
+  exports. getStudentByName = (req, res)  => {
+    const name = req.params.name;
+    student.aggregate([
+      { $match: { name: name } }
+    ]).exec((err, students) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Error retrieving students');
+      }
+      res.json(students);
+    });
+  }
     exports.Deletestudent= async(req, res) =>{
       try
       {const deleted= await student.findByIdAndDelete(req.params.id)

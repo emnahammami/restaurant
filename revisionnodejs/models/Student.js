@@ -3,7 +3,8 @@ var Schema = mongoose.Schema;
 var student = new Schema(
     {
        name :String,
-        age: Number
+        age: Number,
+        note:Number
     }
 );    
 module.exports = mongoose.model('student',student);

@@ -108,13 +108,14 @@ router.put('/:id', function(req, res, next) {
 
   module.exports = router;*/
   const express = require("express");
-const { Deletestudent,Editstudent,Addstudent,Getstudent,Getstudentbyage} = require("../service/student");
+const { getStudentByName,getStudentsNameSort,Deletestudent,Editstudent,Addstudent,Getstudent,Getstudentbyage} = require("../service/student");
 
 
 const studentRoutes = express.Router();
 
 
-
+studentRoutes.get('/showbyname/:name', getStudentByName);
+studentRoutes.get("/namesort",getStudentsNameSort)
 studentRoutes.get("/all",Getstudent)
 studentRoutes.get("/allmajor",Getstudentbyage)
 studentRoutes.post("/Add",Addstudent)
